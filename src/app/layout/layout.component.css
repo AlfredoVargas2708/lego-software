@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+p-select {
+  width: 100%;
+  max-width: 250px;
+}
+
+.p-inputtext {
+  width: 100%;
+  max-width: 350px;
+}
+
+p-table {
+  th {
+    font-weight: bold;
+  }
+}
