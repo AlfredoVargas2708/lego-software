@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Tooltip } from 'primeng/tooltip';
 import { AutoComplete } from 'primeng/autocomplete';
 import { LegoService } from '../lego.service';
@@ -15,7 +15,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-modal',
-  imports: [CommonModule, ReactiveFormsModule, InputGroupModule, InputTextModule, InputGroupAddon, Tooltip, AutoComplete, ButtonModule, IftaLabelModule, FloatLabelModule],
+  imports: [CommonModule, ReactiveFormsModule, InputGroupModule, InputTextModule, InputGroupAddon,
+    Tooltip, AutoComplete, ButtonModule, IftaLabelModule, FloatLabelModule],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css',
 })
@@ -25,6 +26,7 @@ export class EditModalComponent implements OnInit {
   private fb: FormBuilder;
   private legoService: LegoService;
   private cdr: ChangeDetectorRef;
+  private ref: DynamicDialogRef;
 
   public lego!: Lego;
   public options: string[];
@@ -34,20 +36,21 @@ export class EditModalComponent implements OnInit {
     this.config = inject(DynamicDialogConfig);
     this.legoService = inject(LegoService);
     this.cdr = inject(ChangeDetectorRef);
+    this.ref = inject(DynamicDialogRef);
 
     this.options = [];
     this.legoForm = this.fb.group({})
   }
 
   ngOnInit(): void {
-    if(this.config.data) {
+    if (this.config.data) {
       this.legoForm = this.fb.group({
         id: [this.config.data.lego.id, [Validators.required]],
         lego: [this.config.data.lego.lego],
         pieza: [this.config.data.lego.pieza],
         image_lego: [this.config.data.lego.imagen_lego],
         image_pieza: [this.config.data.lego.imagen_pieza],
-        cantidad: [this.config.data.lego.cantidad, [Validators.required]],
+        cantidad: [this.config.data.lego.cantidad],
         task: [this.config.data.lego.task],
         set: [this.config.data.lego.set],
         esta_pedido: [this.config.data.lego.esta_pedido],
@@ -76,7 +79,7 @@ export class EditModalComponent implements OnInit {
   public onSelectLego(event: any) {
     const selectedValue = event?.value;
     if (!selectedValue) return;
-  
+
     this.legoService.getImage(selectedValue, 'lego').subscribe({
       next: response => {
         this.legoForm.get('image_lego')?.setValue(response);
@@ -85,11 +88,11 @@ export class EditModalComponent implements OnInit {
       error: err => console.error('[onSelectLego] Error obteniendo imagen:', err)
     });
   }
-  
+
   public onSelectPieza(event: any) {
     const selectedValue = event?.value;
     if (!selectedValue) return;
-  
+
     this.legoService.getImage(selectedValue, 'pieza').subscribe({
       next: response => {
         this.legoForm.get('image_pieza')?.setValue(response);
@@ -98,6 +101,12 @@ export class EditModalComponent implements OnInit {
       error: err => console.error('[onSelectPieza] Error obteniendo imagen:', err)
     });
   }
-  
 
+  closeModal() {
+    this.ref.close(this.legoForm.value);
+  }
+
+  cancelModal() {
+    this.ref.close()
+  }
 }

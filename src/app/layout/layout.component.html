@@ -21,14 +21,6 @@
           (onClear)="clearInput()"
           [showClear]="true"
         />
-        @if (isLoading && inputValue !== '') {
-        <p-progress-spinner
-          ariaLabel="loading"
-          strokeWidth="8"
-          fill="transparent"
-          [style]="{ width: '50px', height: '50px' }"
-        />
-        }
       </div>
     </div>
     @if (legos.length > 0 && inputValue !== '') {
@@ -36,11 +28,13 @@
       <p-table
         [value]="legos"
         [columns]="cols"
+        [first]="first"
         showGridlines
         [tableStyle]="{ 'min-width': '50rem' }"
         [paginator]="true"
         [rows]="rows"
-        [rowsPerPageOptions]="[5, 10, 20]"
+        [rowsPerPageOptions]="[4, 8]"
+        (onPage)="pageChange($event)"
         [loading]="isLoading"
       >
         <ng-template #header>

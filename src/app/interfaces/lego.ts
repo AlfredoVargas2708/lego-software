@@ -1,8 +1,8 @@
 export interface Lego {
     id: number;
-    imagen_lego: string;
+    imagen_lego: string | null;
     lego: number;
-    imagen_pieza: string;
+    imagen_pieza: string | null;
     pieza: number;
     cantidad: number;
     set: string;

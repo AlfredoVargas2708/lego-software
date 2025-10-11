@@ -152,11 +152,13 @@
         label="Guardar cambios"
         severity="primary"
         [style]="{ width: '100%', 'min-width': '200px' }"
+        (onClick)="closeModal()"
       ></p-button>
       <p-button
         label="Cancelar cambios"
         severity="danger"
         [style]="{ width: '100%', 'min-width': '200px' }"
+        (onClick)="cancelModal()"
       ></p-button>
     </div>
   </form>

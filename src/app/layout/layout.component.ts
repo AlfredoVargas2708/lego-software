@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, type OnInit } from '@angular/core';
 import { Select } from 'primeng/select'
-import { TableModule } from 'primeng/table';
+import { TableModule, TablePageEvent } from 'primeng/table';
 import { Lego } from '../interfaces/lego';
 import { FormsModule } from '@angular/forms';
 import { Column } from '../interfaces/columns';
@@ -10,14 +10,13 @@ import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
-import { ProgressSpinner } from 'primeng/progressspinner';
 import { LegoService } from '../lego.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete, ProgressSpinner],
+  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
   providers: [ConfirmationService, MessageService, DialogService]
@@ -36,7 +35,10 @@ export class LayoutComponent implements OnInit{
   selectValue: Column;
   inputValue: string;
   rows: number;
+  first: number;
+  page: number;
   isLoading: boolean;
+  totalRecords: number;
 
   constructor() {
 
@@ -51,7 +53,10 @@ export class LayoutComponent implements OnInit{
     this.options = [];
     this.inputValue = '';
     this.selectValue = { field: '', header: '' };
-    this.rows = 5;
+    this.rows = 4;
+    this.first = 0;
+    this.page = 1;
+    this.totalRecords = 0;
     this.isLoading = false;
   }
 
@@ -88,9 +93,10 @@ export class LayoutComponent implements OnInit{
 
   public getLegos() {
     this.isLoading = true;
-    this.legoService.getLegos(this.selectValue.field, this.inputValue).subscribe({
+    this.legoService.getLegos(this.selectValue.field, this.inputValue, this.rows, this.page).subscribe({
       next: response => {
         this.legos = response.rows;
+        this.totalRecords = response.count;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -98,6 +104,14 @@ export class LayoutComponent implements OnInit{
         console.error("[getLegos] error obteniendo legos:", err);
       }
     })
+  }
+
+  public pageChange(event: TablePageEvent) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.page = Math.ceil(this.first/this.rows) + 1;
+
+    this.getLegos();
   }
 
   public onEdit(lego: Lego) {
@@ -118,17 +132,41 @@ export class LayoutComponent implements OnInit{
       });
 
     // Handle modal close
-    dialogRef?.onClose.subscribe((result) => {
+    dialogRef?.onClose.subscribe((result: Lego) => {
       if (result) {
         console.log('Modal closed with result:', result);
         // Here you can update the lego in your list or save to backend
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Éxito', 
-          detail: 'Lego actualizado correctamente' 
-        });
+        this.legoService.editLego(result).subscribe({
+          next: response => {
+            this.messageService.add({ 
+              severity: 'success', 
+              summary: 'Éxito', 
+              detail: response.message
+            });
+            if(this.selectValue.field === 'lego' && result.lego !== lego.lego) {
+              this.inputValue = result.lego.toString();
+            }else if(this.selectValue.field === 'pieza' && result.pieza !== lego.pieza) {
+              this.inputValue = result.pieza.toString();
+            }else if(this.selectValue.field === 'task' && result.task !== result.task) {
+              this.inputValue = result.task.toString();
+            }
+
+            this.getLegos();
+          },
+          error: err => {
+            this.messageService.add({ 
+              severity: 'danger', 
+              summary: 'Error', 
+              detail: 'Error al editar el lego' 
+            });
+          }
+        })
       } else {
-        console.log('Modal closed without saving');
+        this.messageService.add({ 
+          severity: 'info', 
+          summary: 'Cancelado', 
+          detail: 'No se edito el lego'
+        });
       }
     });
   }
