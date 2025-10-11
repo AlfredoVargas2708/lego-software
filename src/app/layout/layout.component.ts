@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewChild, type OnInit } from '@angular/core';
-import { InputText } from 'primeng/inputtext';
-import { Select, SelectChangeEvent } from 'primeng/select'
-import { TableModule } from 'primeng/table';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, type OnInit } from '@angular/core';
+import { Select } from 'primeng/select'
+import { TableModule, TablePageEvent } from 'primeng/table';
 import { Lego } from '../interfaces/lego';
 import { FormsModule } from '@angular/forms';
 import { Column } from '../interfaces/columns';
@@ -10,10 +9,12 @@ import { ButtonModule } from "primeng/button";
 import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
+import { AutoComplete } from 'primeng/autocomplete';
+import { LegoService } from '../lego.service';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, Select, InputText, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast],
+  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,78 +22,75 @@ import { Toast } from 'primeng/toast';
 })
 export class LayoutComponent implements OnInit {
 
-  @ViewChild('inputElement', { static: false }) inputElement!: ElementRef;
-
   private confirmationService: ConfirmationService;
   private messageService: MessageService;
+  private legoService: LegoService;
+  private cdr: ChangeDetectorRef;
 
   legos: Lego[];
   cols: Column[];
-  inputValue: string | number;
+  options: string[];
+  selectValue: Column;
+  inputValue: string;
+  rows: number;
+  isLoading: boolean;
 
   constructor() {
 
     this.confirmationService = inject(ConfirmationService);
     this.messageService = inject(MessageService);
+    this.legoService = inject(LegoService);
+    this.cdr = inject(ChangeDetectorRef);
 
     this.legos = [];
-    this.cols = [
-      { field: 'lego', header: 'lego' },
-      { field: 'pieza', header: 'pieza' },
-      { field: 'cantidad', header: 'cantidad' },
-      { field: 'task', header: 'task' },
-      { field: 'set', header: 'set' },
-      { field: 'esta_pedido', header: 'esta pedido' },
-      { field: 'esta_completo', header: 'esta completo' },
-      { field: 'esta_reemplazado', header: 'esta reemplazado' },
-      { field: 'comentarios', header: 'comentarios' },
-    ];
+    this.cols = [];
+    this.options = [];
     this.inputValue = '';
+    this.selectValue = { field: '', header: '' };
+    this.rows = 5;
+    this.isLoading = false;
   }
 
   ngOnInit(): void {
-    this.legos.push({
-      id: 0,
-      cantidad: 0,
-      comentarios: '',
-      esta_completo: '',
-      esta_pedido: '',
-      esta_reemplazado: '',
-      imagen_lego: '',
-      imagen_pieza: '',
-      lego: 0,
-      pieza: 0,
-      set: '',
-      task: 0
-    },
-      {
-        id: 1,
-        cantidad: 1,
-        comentarios: '',
-        esta_completo: '',
-        esta_pedido: '',
-        esta_reemplazado: '',
-        imagen_lego: '',
-        imagen_pieza: '',
-        lego: 1,
-        pieza: 1,
-        set: '',
-        task: 1
-      })
-  }
-
-  public onSelectChange(event: SelectChangeEvent) {
-    console.log(event.value);
-
-    setTimeout(() => {
-      if (this.inputElement && this.inputElement.nativeElement) {
-        this.inputElement.nativeElement.focus();
+    this.legoService.getColumns().subscribe({
+      next: response => {
+        this.cols = response.filter(c => c.field !== 'id');
+        this.cdr.markForCheck();
+      },
+      error: err => {
+        console.error('[GetColumns] error obteniendo las columnas:', err);
       }
-    }, 0);
+    })
   }
 
   public onInput() {
-    console.log(this.inputValue)
+    if (this.inputValue !== '') {
+      this.legoService.getInputOptions(this.selectValue.field, this.inputValue).subscribe({
+        next: response => {
+          this.options = response;
+          this.cdr.markForCheck();
+        },
+        error: err => {
+          console.error('[onInput] error obteniendo las opciones:', err);
+        }
+      })
+    }
+  }
+
+  public getLegos() {
+    this.isLoading = true;
+    this.legoService.getLegos(this.selectValue.field, this.inputValue).subscribe({
+      next: response => {
+        this.legos = response.rows;
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 2000)
+      },
+      error: err => {
+        console.error("[getLegos] error obteniendo legos:", err);
+      }
+    })
   }
 
   public onEdit(lego: Lego) {
