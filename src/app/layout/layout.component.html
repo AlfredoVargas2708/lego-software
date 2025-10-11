@@ -11,16 +11,28 @@
         style="text-transform: capitalize"
         [(ngModel)]="selectValue"
       />
-      <p-auto-complete
-        #inputElement
-        [(ngModel)]="inputValue"
-        [suggestions]="options"
-        (completeMethod)="onInput()"
-        (onSelect)="getLegos()"
-      />
+      <div class="d-flex align-items-center gap-1">
+        <p-auto-complete
+          #inputElement
+          [(ngModel)]="inputValue"
+          [suggestions]="options"
+          (completeMethod)="onInput()"
+          (onSelect)="getLegos()"
+          (onClear)="clearInput()"
+          [showClear]="true"
+        />
+        @if (isLoading && inputValue !== '') {
+        <p-progress-spinner
+          ariaLabel="loading"
+          strokeWidth="8"
+          fill="transparent"
+          [style]="{ width: '50px', height: '50px' }"
+        />
+        }
+      </div>
     </div>
-    @if (legos.length > 0) {
-    <div>
+    @if (legos.length > 0 && inputValue !== '') {
+    <div class="table-responsive">
       <p-table
         [value]="legos"
         [columns]="cols"
@@ -54,16 +66,19 @@
             }
             <td>
               <div class="d-flex flex-column gap-2">
-                <p-button
-                  label="Editar Lego"
-                  severity="primary"
-                  [style]="{ width: '100%' }"
-                  (onClick)="onEdit(rowData)"
-                ></p-button>
+                <div>
+                  <p-toast />
+                  <p-button
+                    label="Editar Lego"
+                    severity="primary"
+                    [style]="{ width: '100%', 'min-width': '150px' }"
+                    (onClick)="onEdit(rowData)"
+                  ></p-button>
+                </div>
                 <p-button
                   label="Eliminar Lego"
                   severity="danger"
-                  [style]="{ width: '100%' }"
+                  [style]="{ width: '100%', 'min-width': '150px' }"
                   (onClick)="onDelete(rowData['id'])"
                 ></p-button>
               </div>

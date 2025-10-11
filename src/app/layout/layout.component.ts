@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, type OnInit } from '@angular/core';
 import { Select } from 'primeng/select'
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { Lego } from '../interfaces/lego';
 import { FormsModule } from '@angular/forms';
 import { Column } from '../interfaces/columns';
@@ -10,19 +10,22 @@ import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { LegoService } from '../lego.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { EditModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete],
+  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete, ProgressSpinner],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService, DialogService]
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit{
 
   private confirmationService: ConfirmationService;
+  private dialogService: DialogService;
   private messageService: MessageService;
   private legoService: LegoService;
   private cdr: ChangeDetectorRef;
@@ -41,6 +44,7 @@ export class LayoutComponent implements OnInit {
     this.messageService = inject(MessageService);
     this.legoService = inject(LegoService);
     this.cdr = inject(ChangeDetectorRef);
+    this.dialogService = inject(DialogService);
 
     this.legos = [];
     this.cols = [];
@@ -77,15 +81,18 @@ export class LayoutComponent implements OnInit {
     }
   }
 
+  public clearInput() {
+    this.inputValue = '';
+    this.legos = [];
+  }
+
   public getLegos() {
     this.isLoading = true;
     this.legoService.getLegos(this.selectValue.field, this.inputValue).subscribe({
       next: response => {
         this.legos = response.rows;
-        setTimeout(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        }, 2000)
+        this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: err => {
         console.error("[getLegos] error obteniendo legos:", err);
@@ -94,7 +101,36 @@ export class LayoutComponent implements OnInit {
   }
 
   public onEdit(lego: Lego) {
-    console.log(lego)
+    console.log(lego);
+    const dialogRef = this.dialogService.open(EditModalComponent, {
+        header: 'Editar Lego',
+        width: '50vw',
+        height: '50vw',
+        modal: true,
+        closable: true,
+        closeOnEscape: true,
+        data: { lego: lego }, // Pass a copy of the lego object
+        contentStyle: { overflow: 'auto' },
+        breakpoints: {
+          '960px' : '75vw',
+          '640px' : '90vw'
+        }
+      });
+
+    // Handle modal close
+    dialogRef?.onClose.subscribe((result) => {
+      if (result) {
+        console.log('Modal closed with result:', result);
+        // Here you can update the lego in your list or save to backend
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Éxito', 
+          detail: 'Lego actualizado correctamente' 
+        });
+      } else {
+        console.log('Modal closed without saving');
+      }
+    });
   }
 
   public onDelete(lego_id: number) {

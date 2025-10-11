@@ -32,4 +32,8 @@ export class LegoService {
     return this.http.get<Response>(`${environment.apiUrl}/legos?column=${column}&value=${value}`)
   }
 
+  getImage(value: string, type: string): Observable<string> {
+    return this.http.get<string>(`${environment.apiUrl}/image?value=${value}&type=${type}`);
+  }
+
 }
