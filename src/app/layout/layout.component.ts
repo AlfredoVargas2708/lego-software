@@ -251,7 +251,15 @@ export class LayoutComponent implements OnInit {
       },
 
       accept: () => {
-        this.messageService.add({ severity: 'info', summary: 'Confirmado', detail: 'Lego Eliminado' });
+        this.legoService.deleteLego(lego_id).subscribe({
+          next: response => {
+            this.messageService.add({ severity: 'info', summary: 'Confirmado', detail: response.message });
+            this.getLegos();
+          },
+          error: err => {
+            console.error('[onDelete] error eliminando el lego:', err);
+          }
+        })
       },
       reject: () => {
         this.messageService.add({ severity: 'error', summary: 'Cancelado', detail: 'No se elimino el lego' });

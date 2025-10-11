@@ -45,4 +45,8 @@ export class LegoService {
     return this.http.put<any>(`${environment.apiUrl}`, { lego })
   }
 
+  deleteLego(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}?id=${id}`)
+  }
+
 }
