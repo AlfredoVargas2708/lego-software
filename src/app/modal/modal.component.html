@@ -73,13 +73,13 @@
         </p-inputgroup-addon>
         <p-iftaLabel>
           <p-autocomplete
-            inputId="set"
-            formControlName="set"
+            inputId="set_nombre"
+            formControlName="set_nombre"
             [showClear]="true"
-            (completeMethod)="getOptions('set')"
+            (completeMethod)="getOptions('set_nombre')"
             [suggestions]="options"
           />
-          <label for="set">{{ 'set' | titlecase }}</label>
+          <label for="set_nombre">{{ 'nombre set' | titlecase }}</label>
         </p-iftaLabel>
       </p-inputgroup>
       <p-inputgroup>
@@ -149,13 +149,13 @@
     </div>
     <div class="d-flex align-items-center justify-content-between">
       <p-button
-        label="Guardar cambios"
+        [label]="config.data.isEditing ? 'Gudardar Cambios' : 'Agregar Lego'"
         severity="primary"
         [style]="{ width: '100%', 'min-width': '200px' }"
         (onClick)="closeModal()"
       ></p-button>
       <p-button
-        label="Cancelar cambios"
+      [label]="config.data.isEditing ? 'Cancelar Cambios' : 'Cancelar Nuevo Lego'"
         severity="danger"
         [style]="{ width: '100%', 'min-width': '200px' }"
         (onClick)="cancelModal()"

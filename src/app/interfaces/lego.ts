@@ -5,7 +5,7 @@ export interface Lego {
     imagen_pieza: string | null;
     pieza: number;
     cantidad: number;
-    set: string;
+    set_nombre: string;
     task: number;
     esta_pedido: string;
     esta_completo: string;

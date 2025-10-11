@@ -41,4 +41,8 @@ export class LegoService {
     return this.http.post<any>(`${environment.apiUrl}`, { lego });
   }
 
+  addLego(lego: any): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}`, { lego })
+  }
+
 }

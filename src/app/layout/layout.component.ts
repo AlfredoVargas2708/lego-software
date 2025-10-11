@@ -12,7 +12,7 @@ import { Toast } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
 import { LegoService } from '../lego.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { EditModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-layout',
@@ -21,7 +21,7 @@ import { EditModalComponent } from '../modal/modal.component';
   styleUrl: './layout.component.css',
   providers: [ConfirmationService, MessageService, DialogService]
 })
-export class LayoutComponent implements OnInit{
+export class LayoutComponent implements OnInit {
 
   private confirmationService: ConfirmationService;
   private dialogService: DialogService;
@@ -109,27 +109,29 @@ export class LayoutComponent implements OnInit{
   public pageChange(event: TablePageEvent) {
     this.first = event.first;
     this.rows = event.rows;
-    this.page = Math.ceil(this.first/this.rows) + 1;
+    this.page = Math.ceil(this.first / this.rows) + 1;
 
     this.getLegos();
   }
 
   public onEdit(lego: Lego) {
     console.log(lego);
-    const dialogRef = this.dialogService.open(EditModalComponent, {
-        header: 'Editar Lego',
-        width: '50vw',
-        height: '50vw',
-        modal: true,
-        closable: true,
-        closeOnEscape: true,
-        data: { lego: lego }, // Pass a copy of the lego object
-        contentStyle: { overflow: 'auto' },
-        breakpoints: {
-          '960px' : '75vw',
-          '640px' : '90vw'
-        }
-      });
+    const dialogRef = this.dialogService.open(ModalComponent, {
+      header: 'Editar Lego',
+      width: '50vw',
+      height: '50vw',
+      modal: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        lego: lego, isEditing: true
+      }, // Pass a copy of the lego object
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
+      }
+    });
 
     // Handle modal close
     dialogRef?.onClose.subscribe((result: Lego) => {
@@ -138,33 +140,91 @@ export class LayoutComponent implements OnInit{
         // Here you can update the lego in your list or save to backend
         this.legoService.editLego(result).subscribe({
           next: response => {
-            this.messageService.add({ 
-              severity: 'success', 
-              summary: 'Éxito', 
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
               detail: response.message
             });
-            if(this.selectValue.field === 'lego' && result.lego !== lego.lego) {
+            if (this.selectValue.field === 'lego' && result.lego !== lego.lego) {
               this.inputValue = result.lego.toString();
-            }else if(this.selectValue.field === 'pieza' && result.pieza !== lego.pieza) {
+            } else if (this.selectValue.field === 'pieza' && result.pieza !== lego.pieza) {
               this.inputValue = result.pieza.toString();
-            }else if(this.selectValue.field === 'task' && result.task !== result.task) {
+            } else if (this.selectValue.field === 'task' && result.task !== lego.task) {
               this.inputValue = result.task.toString();
             }
 
             this.getLegos();
           },
           error: err => {
-            this.messageService.add({ 
-              severity: 'danger', 
-              summary: 'Error', 
-              detail: 'Error al editar el lego' 
+            this.messageService.add({
+              severity: 'danger',
+              summary: 'Error',
+              detail: 'Error al editar el lego'
             });
           }
         })
       } else {
-        this.messageService.add({ 
-          severity: 'info', 
-          summary: 'Cancelado', 
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Cancelado',
+          detail: 'No se edito el lego'
+        });
+      }
+    });
+  }
+
+  public openAddModal() {
+    const dialogRef = this.dialogService.open(ModalComponent, {
+      header: 'Agregar Lego',
+      width: '50vw',
+      height: '50vw',
+      modal: true,
+      closable: true,
+      closeOnEscape: true,
+      data: { isEditing: false },
+      contentStyle: { overflow: 'auto' },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
+      }
+    });
+
+    dialogRef?.onClose.subscribe((result: any) => {
+      if (result) {
+        console.log('Modal closed with result:', result);
+        // Here you can update the lego in your list or save to backend
+        this.legoService.addLego(result).subscribe({
+          next: response => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: response.message
+            });
+            if (result.lego !== null) {
+              this.inputValue = result.lego.toString();
+              this.selectValue = { field: 'lego', header: 'lego' }
+            } else if (result.pieza !== null) {
+              this.inputValue = result.pieza.toString();
+              this.selectValue = { field: 'pieza', header: 'pieza' }
+            } else if (result.task !== null) {
+              this.inputValue = result.task.toString();
+              this.selectValue = { field: 'task', header: 'task' }
+            }
+
+            this.getLegos();
+          },
+          error: err => {
+            this.messageService.add({
+              severity: 'danger',
+              summary: 'Error',
+              detail: 'Error al editar el lego'
+            });
+          }
+        })
+      } else {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Cancelado',
           detail: 'No se edito el lego'
         });
       }

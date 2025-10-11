@@ -20,7 +20,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css',
 })
-export class EditModalComponent implements OnInit {
+export class ModalComponent implements OnInit {
   public legoForm: FormGroup;
   public config: DynamicDialogConfig;
   private fb: FormBuilder;
@@ -39,25 +39,38 @@ export class EditModalComponent implements OnInit {
     this.ref = inject(DynamicDialogRef);
 
     this.options = [];
-    this.legoForm = this.fb.group({})
+    this.legoForm = this.fb.group({
+      id: [null, [Validators.required]],
+      lego: [null],
+      pieza: [null],
+      image_lego: [''],
+      image_pieza: [''],
+      cantidad: [null],
+      task: [null],
+      set_nombre: [''],
+      esta_pedido: [''],
+      esta_completo: [''],
+      esta_reemplazado: [''],
+      comentarios: ['']
+    })
   }
 
   ngOnInit(): void {
-    if (this.config.data) {
-      this.legoForm = this.fb.group({
-        id: [this.config.data.lego.id, [Validators.required]],
-        lego: [this.config.data.lego.lego],
-        pieza: [this.config.data.lego.pieza],
-        image_lego: [this.config.data.lego.imagen_lego],
-        image_pieza: [this.config.data.lego.imagen_pieza],
-        cantidad: [this.config.data.lego.cantidad],
-        task: [this.config.data.lego.task],
-        set: [this.config.data.lego.set],
-        esta_pedido: [this.config.data.lego.esta_pedido],
-        esta_completo: [this.config.data.lego.esta_completo],
-        esta_reemplazado: [this.config.data.lego.esta_reemplazado],
-        comentarios: [this.config.data.lego.comentarios]
-      })
+    if (this.config.data.lego) {
+      this.legoForm.patchValue({
+        id: this.config.data.lego.id,
+        lego: this.config.data.lego.lego,
+        pieza: this.config.data.lego.pieza,
+        image_lego: this.config.data.lego.imagen_lego,
+        image_pieza: this.config.data.lego.imagen_pieza,
+        cantidad: this.config.data.lego.cantidad,
+        task: this.config.data.lego.task,
+        set_nombre: this.config.data.lego.set_nombre,
+        esta_pedido: this.config.data.lego.esta_pedido,
+        esta_completo: this.config.data.lego.esta_completo,
+        esta_reemplazado: this.config.data.lego.esta_reemplazado,
+        comentarios: this.config.data.lego.comentarios
+      });
     }
   }
 
@@ -103,7 +116,18 @@ export class EditModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.ref.close(this.legoForm.value);
+    let newLego = {
+      lego: this.legoForm.get('lego')?.value !== '' ? this.legoForm.get('lego')?.value : null,
+      pieza: this.legoForm.get('pieza')?.value !== '' ? this.legoForm.get('pieza')?.value : null,
+      cantidad: this.legoForm.get('cantidad')?.value !== '' ? this.legoForm.get('cantidad')?.value : null,
+      task: this.legoForm.get('task')?.value !== '' ? this.legoForm.get('task')?.value : null,
+      set_nombre: this.legoForm.get('set_nombre')?.value,
+      esta_pedido: this.legoForm.get('esta_pedido')?.value,
+      esta_completo: this.legoForm.get('esta_completo')?.value,
+      esta_reemplazado: this.legoForm.get('esta_reemplazado')?.value,
+      comentarios: this.legoForm.get('comentarios')?.value
+    }
+    this.ref.close(this.config.data.isEditing ? this.legoForm.value : newLego);
   }
 
   cancelModal() {
