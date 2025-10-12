@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from './environments/environment';
+import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Column } from './interfaces/columns';
+import { Column } from '../interfaces/columns';
 import { Observable, map } from 'rxjs';
-import { Response } from './interfaces/response';
-import { Lego } from './interfaces/lego';
+import { Response } from '../interfaces/response';
+import { Lego } from '../interfaces/lego';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,8 @@ export class LegoService {
     return this.http.get<string[]>(`${environment.apiUrl}/columns`).pipe(
       map(columns => columns.map(column => ({
         field: column,
-        header: column.replace(/_/g, ' ')
+        header: column.replace(/_/g, ' '),
+        minwidth: '150px'
       })))
     );
   }

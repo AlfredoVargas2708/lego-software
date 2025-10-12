@@ -8,7 +8,7 @@ import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Tooltip } from 'primeng/tooltip';
 import { AutoComplete } from 'primeng/autocomplete';
-import { LegoService } from '../lego.service';
+import { LegoService } from '../services/lego.service';
 import { ButtonModule } from 'primeng/button';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { FloatLabelModule } from 'primeng/floatlabel';

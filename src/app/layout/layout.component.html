@@ -1,34 +1,50 @@
 <div class="container-fluid pt-4">
-  <div class="d-flex flex-column gap-4 w-100">
-    <div class="d-flex align-items-center justify-content-left w-100">
-      <h1 class="fs-1">{{ 'piezas de lego' | titlecase }}</h1>
-    </div>
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-2">
-        <p-select
-          placeholder="Seleccione una opción"
-          [options]="cols"
-          optionLabel="header"
-          style="text-transform: capitalize"
-          [(ngModel)]="selectValue"
-        />
-        <p-auto-complete
-          #inputElement
-          [(ngModel)]="inputValue"
-          [suggestions]="options"
-          (completeMethod)="onInput()"
-          (onSelect)="getLegos()"
-          (onClear)="clearInput()"
-          [showClear]="true"
-        />
+  <div class="d-flex flex-column gap-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex align-items-center justify-content-left w-100">
+          <h1 class="fs-1">{{ 'piezas de lego' | titlecase }}</h1>
+        </div>
       </div>
-      <div class="d-flex align-items-center justify-content-center">
-        <p-button
-          label="Agregar Nuevo Lego"
-          severity="primary"
-          [style]="{ width: '100%', 'min-width': '150px' }"
-          (onClick)="openAddModal()"
-        ></p-button>
+    </div>
+    <div class="row justify-content-between gap-2">
+      <div class="col-lg-4 col-md-2 col-sm-12">
+        <div class="d-flex align-items-center gap-2 w-100 filters">
+          <p-select
+            placeholder="Seleccione una opción"
+            [options]="selectOptions"
+            optionLabel="header"
+            style="text-transform: capitalize"
+            [(ngModel)]="selectValue"
+          />
+          <p-auto-complete
+            #inputElement
+            [(ngModel)]="inputValue"
+            [suggestions]="options"
+            (completeMethod)="onInput()"
+            (onSelect)="getLegos()"
+            (onClear)="clearInput()"
+            [showClear]="true"
+          />
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-7 col-sm-12">
+        <div class="d-flex align-items-center justify-content-end gap-2 buttons">
+          <p-button
+            label="Agregar Nuevo Lego"
+            severity="primary"
+            icon="pi pi-plus"
+            [style]="{ width: '100%', 'min-width': '150px' }"
+            (onClick)="openAddModal()"
+          ></p-button>
+          <p-button
+            label="Buscar Lego o Pieza"
+            severity="info"
+            icon="pi pi-search"
+            [style]="{ width: '100%', 'min-width': '150px' }"
+            (onClick)="openAddModal()"
+          ></p-button>
+        </div>
       </div>
     </div>
     @if (legos.length > 0 && inputValue !== '') {
@@ -37,39 +53,36 @@
         [value]="legos"
         [columns]="cols"
         [first]="first"
-        showGridlines
         [tableStyle]="{ 'min-width': '50rem' }"
-        [paginator]="true"
+        paginator="true"
         [rows]="rows"
         [rowsPerPageOptions]="[4, 8]"
         (onPage)="pageChange($event)"
         [loading]="isLoading"
+        showGridlines
+        stripedRows
       >
-        <ng-template #header>
+        <ng-template #header let-columns>
+          <tr></tr>
           <tr>
-            <th>{{ 'imagen lego' | titlecase }}</th>
-            <th>{{ 'imagen pieza' | titlecase }}</th>
-            @for (col of cols; track col.field) {
-            <th>{{ col.header | titlecase }}</th>
-            }
-            <th>{{ 'acciones' | titlecase }}</th>
+            <th *ngFor="let col of columns" [style.min-width]="col.minwidth">
+              {{ col.header | titlecase }}
+            </th>
+            <th>Acciones</th>
           </tr>
         </ng-template>
         <ng-template #body let-rowData let-columns="columns">
           <tr>
-            <td>
-              <img [src]="rowData['imagen_lego']" alt="" style="width: 100px; height: 100px" />
+            <td *ngFor="let col of columns">
+              @if (col.field !== 'imagen_pieza' && col.field !== 'imagen_lego') {
+              {{ rowData[col.field] }}
+              }@else {
+              <img [src]="rowData[col.field]" alt="" style="width: 100px; height: 100px" />
+              }
             </td>
-            <td>
-              <img [src]="rowData['imagen_pieza']" alt="" style="width: 100px; height: 100px" />
-            </td>
-            @for (col of cols; track col.field) {
-            <td>{{ rowData[col.field] }}</td>
-            }
             <td>
               <div class="d-flex flex-column gap-2">
                 <div>
-                  <p-toast />
                   <p-button
                     label="Editar Lego"
                     severity="primary"
@@ -90,8 +103,8 @@
       </p-table>
     </div>
     }
+
+    <p-toast />
+    <p-confirm-dialog />
   </div>
 </div>
-
-<p-toast />
-<p-confirm-dialog />

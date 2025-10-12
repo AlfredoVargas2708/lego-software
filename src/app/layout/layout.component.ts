@@ -10,7 +10,7 @@ import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { AutoComplete } from 'primeng/autocomplete';
-import { LegoService } from '../lego.service';
+import { LegoService } from '../services/lego.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ModalComponent } from '../modal/modal.component';
 
@@ -31,6 +31,7 @@ export class LayoutComponent implements OnInit {
 
   legos: Lego[];
   cols: Column[];
+  selectOptions: Column[];
   options: string[];
   selectValue: Column;
   inputValue: string;
@@ -52,7 +53,8 @@ export class LayoutComponent implements OnInit {
     this.cols = [];
     this.options = [];
     this.inputValue = '';
-    this.selectValue = { field: '', header: '' };
+    this.selectValue = { field: '', header: '', minwidth: '' };
+    this.selectOptions = []
     this.rows = 4;
     this.first = 0;
     this.page = 1;
@@ -63,7 +65,11 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.legoService.getColumns().subscribe({
       next: response => {
-        this.cols = response.filter(c => c.field !== 'id');
+        this.cols.push({ field: 'imagen_pieza', header: 'imagen pieza', minwidth: '150px' }, { field: 'imagen_lego', header: 'imagen lego', minwidth: '150px' },
+          { field: 'color_pieza', header: 'color pieza', minwidth: '150px' }
+        )
+        this.cols = [ ...this.cols, ...response.filter(c => c.field !== 'id')]
+        this.selectOptions = response.filter(c => c.field !== 'id');
         this.cdr.markForCheck();
       },
       error: err => {
@@ -202,13 +208,13 @@ export class LayoutComponent implements OnInit {
             });
             if (result.lego !== null) {
               this.inputValue = result.lego.toString();
-              this.selectValue = { field: 'lego', header: 'lego' }
+              this.selectValue = { field: 'lego', header: 'lego', minwidth: '150px' }
             } else if (result.pieza !== null) {
               this.inputValue = result.pieza.toString();
-              this.selectValue = { field: 'pieza', header: 'pieza' }
+              this.selectValue = { field: 'pieza', header: 'pieza', minwidth: '150px' }
             } else if (result.task !== null) {
               this.inputValue = result.task.toString();
-              this.selectValue = { field: 'task', header: 'task' }
+              this.selectValue = { field: 'task', header: 'task', minwidth: '150px' }
             }
 
             this.getLegos();
@@ -217,7 +223,7 @@ export class LayoutComponent implements OnInit {
             this.messageService.add({
               severity: 'danger',
               summary: 'Error',
-              detail: 'Error al editar el lego'
+              detail: 'Error al agregar el lego'
             });
           }
         })
@@ -225,7 +231,7 @@ export class LayoutComponent implements OnInit {
         this.messageService.add({
           severity: 'info',
           summary: 'Cancelado',
-          detail: 'No se edito el lego'
+          detail: 'No se agrego el lego'
         });
       }
     });

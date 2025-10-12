@@ -12,3 +12,19 @@ p-table {
     font-weight: bold;
   }
 }
+
+.table-responsive {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .buttons {
+    p-button {
+      width: 100%;
+    }
+  }
+
+  .filters {
+    justify-content: space-between;
+  }
+}
