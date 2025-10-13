@@ -13,10 +13,12 @@ import { AutoComplete } from 'primeng/autocomplete';
 import { LegoService } from '../services/lego.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ModalComponent } from '../modal/modal.component';
+import { SearchModalComponent } from '../search-modal/search-modal.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete],
+  imports: [CommonModule, Select, TableModule, FormsModule, ButtonModule, ConfirmDialog, ConfirmDialogModule, Toast, AutoComplete, ProgressSpinnerModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
   providers: [ConfirmationService, MessageService, DialogService]
@@ -39,6 +41,7 @@ export class LayoutComponent implements OnInit {
   first: number;
   page: number;
   isLoading: boolean;
+  isSelected: boolean;
   totalRecords: number;
 
   constructor() {
@@ -60,6 +63,7 @@ export class LayoutComponent implements OnInit {
     this.page = 1;
     this.totalRecords = 0;
     this.isLoading = false;
+    this.isSelected = false;
   }
 
   ngOnInit(): void {
@@ -99,11 +103,13 @@ export class LayoutComponent implements OnInit {
 
   public getLegos() {
     this.isLoading = true;
+    this.isSelected = true;
     this.legoService.getLegos(this.selectValue.field, this.inputValue, this.rows, this.page).subscribe({
       next: response => {
         this.legos = response.rows;
         this.totalRecords = response.count;
         this.isLoading = false;
+        this.isSelected = false;
         this.cdr.markForCheck();
       },
       error: err => {
@@ -234,6 +240,16 @@ export class LayoutComponent implements OnInit {
           detail: 'No se agrego el lego'
         });
       }
+    });
+  }
+
+  public openSearchModal() {
+    const dialogRef = this.dialogService.open(SearchModalComponent, {
+      header: 'Buscar Elemento',
+      closable: true,
+      width: '50vw',
+      height: '450px',
+      modal: true
     });
   }
 

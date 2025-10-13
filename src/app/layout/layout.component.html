@@ -7,8 +7,8 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-between gap-2">
-      <div class="col-lg-4 col-md-2 col-sm-12">
+    <div class="row align-items-center justify-content-between gap-2">
+      <div class="col-lg-5 col-md-2 col-sm-12">
         <div class="d-flex align-items-center gap-2 w-100 filters">
           <p-select
             placeholder="Seleccione una opción"
@@ -26,6 +26,14 @@
             (onClear)="clearInput()"
             [showClear]="true"
           />
+          @if(isSelected) {
+          <p-progress-spinner
+            strokeWidth="8"
+            fill="transparent"
+            animationDuration=".5s"
+            [style]="{ width: '100px', height: '100px' }"
+          />
+          }
         </div>
       </div>
       <div class="col-lg-6 col-md-7 col-sm-12">
@@ -42,7 +50,7 @@
             severity="info"
             icon="pi pi-search"
             [style]="{ width: '100%', 'min-width': '150px' }"
-            (onClick)="openAddModal()"
+            (onClick)="openSearchModal()"
           ></p-button>
         </div>
       </div>

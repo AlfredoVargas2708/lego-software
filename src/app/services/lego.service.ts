@@ -10,10 +10,16 @@ import { Lego } from '../interfaces/lego';
   providedIn: 'root'
 })
 export class LegoService {
-  private http          : HttpClient;
+  private http: HttpClient;
 
   constructor() {
-    this.http           = inject(HttpClient);
+    this.http = inject(HttpClient);
+  }
+
+  getAllLegos(pieza: string): Observable<Lego[]> {
+    return this.http.get<Lego[]>(`${environment.apiUrl}/all`).pipe(
+      map(result => result.filter(res => res.pieza !== null).filter(res => res.pieza.toString().includes(pieza.slice(0, 4))))
+    );
   }
 
   getColumns(): Observable<Column[]> {
@@ -48,6 +54,10 @@ export class LegoService {
 
   deleteLego(id: number): Observable<any> {
     return this.http.delete<any>(`${environment.apiUrl}?id=${id}`)
+  }
+
+  searchLegoApiInfo(type: string, value: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/api-info?type=${type}&value=${value}`);
   }
 
 }
