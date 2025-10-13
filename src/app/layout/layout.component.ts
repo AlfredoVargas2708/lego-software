@@ -13,8 +13,8 @@ import { AutoComplete } from 'primeng/autocomplete';
 import { LegoService } from '../services/lego.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ModalComponent } from '../modal/modal.component';
-import { SearchModalComponent } from '../search-modal/search-modal.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PiezasModalComponent } from '../piezas-modal/piezas-modal.component';
 
 @Component({
   selector: 'app-layout',
@@ -243,16 +243,6 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  public openSearchModal() {
-    const dialogRef = this.dialogService.open(SearchModalComponent, {
-      header: 'Buscar Elemento',
-      closable: true,
-      width: '50vw',
-      height: '450px',
-      modal: true
-    });
-  }
-
   public onDelete(lego_id: number) {
     console.log(lego_id)
     this.confirmationService.confirm({
@@ -286,6 +276,25 @@ export class LayoutComponent implements OnInit {
       reject: () => {
         this.messageService.add({ severity: 'error', summary: 'Cancelado', detail: 'No se elimino el lego' });
       },
+    })
+  }
+
+  public openPiezasModal() {
+    const dialogRef = this.dialogService.open(PiezasModalComponent, {
+      header: 'Buscar Pieza',
+      width: '60vw',
+      height: '700px',
+      modal: true,
+      closable: true
+    })
+
+    dialogRef?.onClose.subscribe((result) => {
+      let { type, value } = result;
+
+      let selectIdx = this.cols.findIndex(col => col.field === type);
+      if(selectIdx !== -1) this.selectValue = this.cols[selectIdx]
+      this.inputValue = value;
+      this.getLegos();
     })
   }
 

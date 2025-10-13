@@ -16,10 +16,8 @@ export class LegoService {
     this.http = inject(HttpClient);
   }
 
-  getAllLegos(pieza: string): Observable<Lego[]> {
-    return this.http.get<Lego[]>(`${environment.apiUrl}/all`).pipe(
-      map(result => result.filter(res => res.pieza !== null).filter(res => res.pieza.toString().includes(pieza.slice(0, 4))))
-    );
+  getAllLegos(): Observable<Lego[]> {
+    return this.http.get<Lego[]>(`${environment.apiUrl}/all`);
   }
 
   getColumns(): Observable<Column[]> {
@@ -56,8 +54,8 @@ export class LegoService {
     return this.http.delete<any>(`${environment.apiUrl}?id=${id}`)
   }
 
-  searchLegoApiInfo(type: string, value: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/api-info?type=${type}&value=${value}`);
+  searchLegoApiInfo(type: string, value: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/api-info?type=${type}&value=${value}`);
   }
 
 }
