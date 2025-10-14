@@ -39,19 +39,19 @@
       <div class="col-lg-6 col-md-7 col-sm-12">
         <div class="d-flex align-items-center justify-content-end gap-2 buttons">
           <p-button
-            label="Agregar Nuevo Lego"
+            label="Agregar Lego"
             severity="primary"
             icon="pi pi-plus"
-            [style]="{ width: '100%', 'min-width': '150px' }"
+            [style]="{ width: '100%', 'max-width': '200px' }"
             (onClick)="openAddModal()"
           ></p-button>
-          <p-button
-            label="Buscar Pieza"
-            severity="info"
-            icon="pi pi-search"
-            [style]="{ width: '100%', 'min-width': '150px' }"
-            (onClick)="openPiezasModal()"
-          ></p-button>
+          <p-select 
+            placeholder="Buscar Online"
+            [style]="{ width: '100%', 'max-width' : '200px'}"
+            [options]="buscarSelectOptions"
+            [(ngModel)]="buscarSelectValue"
+            (onChange)="openModal()"
+          />
         </div>
       </div>
     </div>

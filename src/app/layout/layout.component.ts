@@ -15,6 +15,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ModalComponent } from '../modal/modal.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PiezasModalComponent } from '../piezas-modal/piezas-modal.component';
+import { LegosModalComponent } from '../legos-modal/legos-modal.component';
 
 @Component({
   selector: 'app-layout',
@@ -35,8 +36,10 @@ export class LayoutComponent implements OnInit {
   cols: Column[];
   selectOptions: Column[];
   options: string[];
+  buscarSelectOptions: any[];
   selectValue: Column;
   inputValue: string;
+  buscarSelectValue: string;
   rows: number;
   first: number;
   page: number;
@@ -58,6 +61,8 @@ export class LayoutComponent implements OnInit {
     this.inputValue = '';
     this.selectValue = { field: '', header: '', minwidth: '' };
     this.selectOptions = []
+    this.buscarSelectOptions = ['Lego', 'Pieza']
+    this.buscarSelectValue = '';
     this.rows = 4;
     this.first = 0;
     this.page = 1;
@@ -203,8 +208,6 @@ export class LayoutComponent implements OnInit {
 
     dialogRef?.onClose.subscribe((result: any) => {
       if (result) {
-        console.log('Modal closed with result:', result);
-        // Here you can update the lego in your list or save to backend
         this.legoService.addLego(result).subscribe({
           next: response => {
             this.messageService.add({
@@ -229,7 +232,7 @@ export class LayoutComponent implements OnInit {
             this.messageService.add({
               severity: 'danger',
               summary: 'Error',
-              detail: 'Error al agregar el lego'
+              detail: err
             });
           }
         })
@@ -244,7 +247,6 @@ export class LayoutComponent implements OnInit {
   }
 
   public onDelete(lego_id: number) {
-    console.log(lego_id)
     this.confirmationService.confirm({
       message: '¿Estás seguro de eliminar el lego?',
       header: 'Eliminar',
@@ -279,6 +281,10 @@ export class LayoutComponent implements OnInit {
     })
   }
 
+  public openModal() {
+    this.buscarSelectValue === 'Lego' ? this.openLegoModal() : this.openPiezasModal();
+  }
+
   public openPiezasModal() {
     const dialogRef = this.dialogService.open(PiezasModalComponent, {
       header: 'Buscar Pieza',
@@ -289,12 +295,35 @@ export class LayoutComponent implements OnInit {
     })
 
     dialogRef?.onClose.subscribe((result) => {
-      let { type, value } = result;
+      if(result) {
+        let { type, value } = result;
 
-      let selectIdx = this.cols.findIndex(col => col.field === type);
-      if(selectIdx !== -1) this.selectValue = this.cols[selectIdx]
-      this.inputValue = value;
-      this.getLegos();
+        let selectIdx = this.cols.findIndex(col => col.field === type);
+        if(selectIdx !== -1) this.selectValue = this.cols[selectIdx]
+        this.inputValue = value;
+        this.getLegos();
+        this.buscarSelectValue = '';
+      }else {
+        this.buscarSelectValue = '';
+      }
+    })
+  }
+
+  public openLegoModal() {
+    const dialogRef = this.dialogService.open(LegosModalComponent, {
+      header: 'Buscar Lego',
+      width: '60vw',
+      height: '700px',
+      modal: true,
+      closable: true
+    })
+
+    dialogRef?.onClose.subscribe((result) => {
+      if(result) {
+        this.buscarSelectValue = '';
+      }else {
+        this.buscarSelectValue = '';
+      }
     })
   }
 

@@ -18,9 +18,9 @@
         <h2 class="fw-bold">Piezas</h2>
         <div class="piezas">
             @for (pieza of piezas; track pieza.color_id) {
-            <div class="pieza" [ngClass]="{ 'pieza-active' : pieza.isClicked === true, 'pieza-available' : pieza.available }">
-                <img [src]="pieza.part_img_url" alt=""
-                    [style]="{ width: '70%', height: '70%' }"
+            <div class="pieza"
+                [ngClass]="{ 'pieza-active' : pieza.isClicked === true, 'pieza-available' : pieza.available }">
+                <img [src]="pieza.part_img_url" alt="" [style]="{ width: '70%', height: '70%' }"
                     (click)="clickImage(pieza.color_id)">
                 <p>{{ pieza.color_name }}</p>
             </div>
@@ -29,7 +29,7 @@
         <div class="row justify-content-end">
             <div class="col-6">
                 <div class="d-flex justify-content-end">
-                    <p-button label="Buscar Lego" (onClick)="copyPiezaCode()"/>
+                    <p-button label="Buscar Lego" (onClick)="copyPiezaCode()" />
                 </div>
             </div>
         </div>
