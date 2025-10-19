@@ -16,18 +16,15 @@ export class LegoService {
     this.http = inject(HttpClient);
   }
 
-  getAllLegos(pieza: string): Observable<Lego[]> {
-    return this.http.get<Lego[]>(`${environment.apiUrl}/all`).pipe(
-      map(result => result.filter(res => res.pieza !== null).filter(res => res.pieza.toString().includes(pieza.slice(0, 4))))
-    );
+  getAllLegos(): Observable<Lego[]> {
+    return this.http.get<Lego[]>(`${environment.apiUrl}/all`);
   }
 
   getColumns(): Observable<Column[]> {
     return this.http.get<string[]>(`${environment.apiUrl}/columns`).pipe(
       map(columns => columns.map(column => ({
         field: column,
-        header: column.replace(/_/g, ' '),
-        minwidth: '150px'
+        header: column.replace(/_/g, ' ')
       })))
     );
   }

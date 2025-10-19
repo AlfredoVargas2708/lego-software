@@ -1,118 +1,112 @@
-<div class="container-fluid pt-4">
-  <div class="d-flex flex-column gap-4">
+<div class="container-fluid">
+  <div class="d-flex flex-wrap flex-column gap-4">
     <div class="row">
       <div class="col-12">
-        <div class="d-flex align-items-center justify-content-left w-100">
-          <h1 class="fs-1">{{ 'piezas de lego' | titlecase }}</h1>
-        </div>
+        <h2 class="fw-bold">Piezas de Lego</h2>
       </div>
     </div>
-    <div class="row align-items-center justify-content-between gap-2">
-      <div class="col-lg-5 col-md-2 col-sm-12">
-        <div class="d-flex align-items-center gap-2 w-100 filters">
-          <p-select
-            placeholder="Seleccione una opción"
-            [options]="selectOptions"
-            optionLabel="header"
-            style="text-transform: capitalize"
-            [(ngModel)]="selectValue"
-          />
-          <p-auto-complete
-            #inputElement
-            [(ngModel)]="inputValue"
-            [suggestions]="options"
-            (completeMethod)="onInput()"
-            (onSelect)="getLegos()"
-            (onClear)="clearInput()"
-            [showClear]="true"
-          />
-          @if(isSelected) {
-          <p-progress-spinner
-            strokeWidth="8"
-            fill="transparent"
-            animationDuration=".5s"
-            [style]="{ width: '100px', height: '100px' }"
-          />
-          }
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-7 col-sm-12">
-        <div class="d-flex align-items-center justify-content-end gap-2 buttons">
-          <p-button
-            label="Agregar Nuevo Lego"
-            severity="primary"
-            icon="pi pi-plus"
-            [style]="{ width: '100%', 'min-width': '150px' }"
-            (onClick)="openAddModal()"
-          ></p-button>
-          <p-button
-            label="Buscar Lego o Pieza"
-            severity="info"
-            icon="pi pi-search"
-            [style]="{ width: '100%', 'min-width': '150px' }"
-            (onClick)="openSearchModal()"
-          ></p-button>
-        </div>
-      </div>
-    </div>
-    @if (legos.length > 0 && inputValue !== '') {
-    <div class="table-responsive">
+    <div class="table-responsive-lg">
       <p-table
+        [columns]="options"
         [value]="legos"
-        [columns]="cols"
-        [first]="first"
         [tableStyle]="{ 'min-width': '50rem' }"
-        paginator="true"
+        [(selection)]="selectedLegos"
+        dataKey="id"
         [rows]="rows"
+        [paginator]="legos.length > 0"
+        [rows]="rows"
+        [first]="first"
+        [showCurrentPageReport]="legos.length > 0"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        (onPage)="onPageChange($event)"
         [rowsPerPageOptions]="[4, 8]"
-        (onPage)="pageChange($event)"
         [loading]="isLoading"
-        showGridlines
-        stripedRows
       >
+        <ng-template #caption>
+          <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
+              <p-select
+                placeholder="Buscar Por..."
+                [options]="options"
+                [style]="{ 'text-transform': 'capitalize' }"
+                class="option-select"
+                [(ngModel)]="optionSelected"
+                optionLabel="header"
+              />
+              <p-auto-complete
+                placeholder="Ingresar Valor..."
+                class="auto-complete"
+                [(ngModel)]="inputValue"
+                [showClear]="true"
+                [suggestions]="inputOptions"
+                (completeMethod)="onAutoComplete()"
+                (onSelect)="onSelectValue()"
+              />
+            </div>
+            <div class="d-flex flex-row flex-wrap justify-content-end gap-2 w-100">
+              <p-button
+                label="Agregar Lego"
+                severity="success"
+                iconPos="left"
+                icon="pi pi-plus-circle"
+              />
+              <p-button
+                label="Editar Lego"
+                severity="info"
+                iconPos="left"
+                icon="pi pi-check-circle"
+                [disabled]="!isLegoSelected"
+              />
+              <p-button
+                label="Eliminar Lego"
+                severity="danger"
+                iconPos="left"
+                icon="pi pi-exclamation-triangle"
+                [disabled]="!isLegoSelected"
+              />
+            </div>
+          </div>
+        </ng-template>
         <ng-template #header let-columns>
-          <tr></tr>
           <tr>
-            <th *ngFor="let col of columns" [style.min-width]="col.minwidth">
-              {{ col.header | titlecase }}
-            </th>
-            <th>Acciones</th>
+            <th><p-tableHeaderCheckbox /></th>
+            <th>Imagen Lego</th>
+            <th>Imagen Pieza</th>
+            <th>Color Pieza</th>
+            @for (col of columns; track col) {
+            <th>{{ col.header }}</th>
+            }
           </tr>
         </ng-template>
-        <ng-template #body let-rowData let-columns="columns">
+        <ng-template #body let-rowData let-columns="columns" let-lego>
           <tr>
-            <td *ngFor="let col of columns">
-              @if (col.field !== 'imagen_pieza' && col.field !== 'imagen_lego') {
-              {{ rowData[col.field] }}
-              }@else {
-              <img [src]="rowData[col.field]" alt="" style="width: 100px; height: 100px" />
-              }
+            <td>
+              <p-tableCheckbox [value]="rowData" (click)="onEditLego(rowData)" />
             </td>
             <td>
-              <div class="d-flex flex-column gap-2">
-                <div>
-                  <p-button
-                    label="Editar Lego"
-                    severity="primary"
-                    [style]="{ width: '100%', 'min-width': '150px' }"
-                    (onClick)="onEdit(rowData)"
-                  ></p-button>
-                </div>
-                <p-button
-                  label="Eliminar Lego"
-                  severity="danger"
-                  [style]="{ width: '100%', 'min-width': '150px' }"
-                  (onClick)="onDelete(rowData['id'])"
-                ></p-button>
-              </div>
+              <img [src]="lego.imagen_lego" alt="" />
             </td>
+            <td>
+              <img [src]="lego.imagen_pieza" alt="" />
+            </td>
+            <td>{{ lego.color_pieza }}</td>
+            @for (col of columns; track col) { @if (col.field === 'lego') {
+            <td>{{ rowData[col.field] ?? 'Sin Lego' }}</td>
+            } @else if (col.field === 'pieza') {
+            <td>{{ rowData[col.field] ?? 'Sin Pieza' }}</td>
+            } @else if (col.field === 'task') {
+            <td>{{ rowData[col.field] ?? 'Sin Bolsa' }}</td>
+            }@else if(col.field === 'set_nombre') {
+            <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'Sin Nombre' }}</td>
+            } @else if (col.field === 'comentarios') {
+            <td>{{ rowData[col.field] ? rowData[col.field] : 'Sin Comentarios' }}</td>
+            } @else {
+            <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'No' }}</td>
+            } }
           </tr>
         </ng-template>
       </p-table>
     </div>
-    }
-
-    <p-toast />
-    <p-confirm-dialog />
   </div>
 </div>

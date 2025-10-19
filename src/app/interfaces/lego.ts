@@ -13,4 +13,5 @@ export interface Lego {
     esta_completo: string;
     esta_reemplazado: string;
     comentarios: string;
+    isEditable: boolean;
 }

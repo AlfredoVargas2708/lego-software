@@ -1,0 +1,51 @@
+:host {
+  display: block;
+}
+
+::ng-deep {
+  .option-select {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .auto-complete {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .p-inputtext {
+    width: 100%;
+  }
+
+  .btn-add .p-button,
+  .btn-delete .p-button,
+  .btn-save .p-button {
+    width: 100%;
+  }
+
+  .edit-input {
+    width: 100%;
+    max-width: 100px;
+  }
+
+  .p-datatable-header {
+    width: 100vw;
+  }
+
+  .p-datatable-thead {
+    th {
+      text-transform: capitalize;
+      min-width: 10rem;
+      font-size: 12px;
+    }
+  }
+
+  .p-datatable-tbody {
+    td {
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  }
+}
