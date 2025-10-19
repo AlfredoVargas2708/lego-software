@@ -73,6 +73,9 @@
               "buildTarget": "lego-software:build:development"
             }
           },
+          "options": {
+            "port": 4100
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {

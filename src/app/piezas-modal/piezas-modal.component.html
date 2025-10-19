@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="d-flex flex-column gap-4">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-7">
+                <input pInputText placeholder="Ingrese una pieza..." [style]="{ 'width' : '100%' }"
+                    [(ngModel)]="inputValue">
+            </div>
+            <div class="col-5">
+                <div class="d-flex justify-content-end">
+                    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
+                        [style]="{ width: '50px' , height: '50px', display: !isLoading ? 'none' : 'block' }" />
+                    <p-button label="Buscar Pieza" severity="info" [style]="{ 'width' : '100%' }" icon="pi pi-search"
+                        (onClick)="searchPieza()" />
+                </div>
+            </div>
+        </div>
+        @if (piezas.length > 0) {
+        <h2 class="fw-bold">Piezas</h2>
+        <div class="piezas">
+            @for (pieza of piezas; track pieza.color_id) {
+            <div class="pieza"
+                [ngClass]="{ 'pieza-active' : pieza.isClicked === true, 'pieza-available' : pieza.available }">
+                <img [src]="pieza.part_img_url" alt="" [style]="{ width: '70%', height: '70%' }"
+                    (click)="clickImage(pieza.color_id)">
+                <p>{{ pieza.color_name }}</p>
+            </div>
+            }
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-6">
+                <div class="d-flex justify-content-end">
+                    <p-button label="Buscar Lego" (onClick)="copyPiezaCode()" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

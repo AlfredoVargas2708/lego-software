@@ -53,8 +53,8 @@ export class LegoService {
     return this.http.delete<any>(`${environment.apiUrl}?id=${id}`)
   }
 
-  searchLegoApiInfo(type: string, value: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/api-info?type=${type}&value=${value}`);
+  searchLegoApiInfo(type: string, value: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/api-info?type=${type}&value=${value}`);
   }
 
 }
