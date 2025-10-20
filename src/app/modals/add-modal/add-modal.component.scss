@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lego-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.images {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  img {
+    width: 125px;
+    height: 125px;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+::ng-deep {
+  .p-inputgroup {
+    width: 100%;
+    max-width: 20vw;
+  }
+}

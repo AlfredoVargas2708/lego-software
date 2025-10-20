@@ -41,7 +41,7 @@ export class LegoService {
     return this.http.get<string>(`${environment.apiUrl}/image?value=${value}&type=${type}`);
   }
 
-  editLego(lego: Lego): Observable<any> {
+  editLego(lego: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}`, { lego });
   }
 

@@ -1,7 +1,7 @@
 export interface Lego {
     id: number;
     imagen_lego: string;
-    set_name: string;
+    lego_nombre: string;
     lego: number;
     imagen_pieza: string;
     color_pieza: string
@@ -13,5 +13,4 @@ export interface Lego {
     esta_completo: string;
     esta_reemplazado: string;
     comentarios: string;
-    isEditable: boolean;
 }

@@ -1,0 +1,95 @@
+<div class="card border-0 p-2">
+    <form [formGroup]="legoForm" class="lego-form">
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-search"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="lego" (completeMethod)="onAutoComplete('lego')" [suggestions]="inputOptions"
+                    (onSelect)="getImage('lego')" />
+                <label for="lego">Código Lego</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-search"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="pieza" (completeMethod)="onAutoComplete('pieza')" [suggestions]="inputOptions"
+                (onSelect)="getImage('pieza')" />
+                <label for="pieza">Código Pieza</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-box"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="cantidad" (completeMethod)="onAutoComplete('cantidad')" [suggestions]="inputOptions" />
+                <label for="cantidad">Cantidad Pedida</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-list"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="task" (completeMethod)="onAutoComplete('task')" [suggestions]="inputOptions"/>
+                <label for="task">N° Bolsa</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-verified"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="set_nombre" (completeMethod)="onAutoComplete('set_nombre')" [suggestions]="inputOptions" />
+                <label for="set_nombre">Nombre Set</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-verified"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="esta_pedido" (completeMethod)="onAutoComplete('esta_pedido')" [suggestions]="inputOptions" />
+                <label for="esta_pedido">Esta Pedido</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-verified"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="esta_completo" (completeMethod)="onAutoComplete('esta_completo')" [suggestions]="inputOptions" />
+                <label for="esta_completo">Esta Completo</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-verified"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="esta_reemplazado" (completeMethod)="onAutoComplete('esta_reemplazado')" [suggestions]="inputOptions"/>
+                <label for="esta_reemplazado">Esta Reemplazado</label>
+            </p-floatlabel>
+        </p-inputgroup>
+        <p-inputgroup>
+            <p-inputgroup-addon>
+                <i class="pi pi-plus-circle"></i>
+            </p-inputgroup-addon>
+            <p-floatlabel variant="on">
+                <p-auto-complete formControlName="comentarios" (completeMethod)="onAutoComplete('comentarios')" [suggestions]="inputOptions" />
+                <label for="comentarios">Comentarios</label>
+            </p-floatlabel>
+        </p-inputgroup>
+    </form>
+    <div class="images">
+        <img [src]="legoForm.get('imagen_lego')?.value" alt="">
+        <img [src]="legoForm.get('imagen_pieza')?.value" alt="">
+    </div>
+    <div class="buttons">
+        <p-button label="Cancelar Cambios" severity="danger" variant="outlined" class="btn-cancel" (onClick)="discardChanges()" />
+        <p-button label="Guardar Cambios" severity="success" variant="outlined" class="btn-submit" (onClick)="saveChanges()"/>
+    </div>
+</div>

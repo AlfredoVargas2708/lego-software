@@ -6,6 +6,8 @@
       </div>
     </div>
     <div class="table-responsive-lg">
+      <p-toast />
+      <p-confirmdialog />
       <p-table
         [columns]="options"
         [value]="legos"
@@ -21,14 +23,13 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         (onPage)="onPageChange($event)"
         [rowsPerPageOptions]="[4, 8]"
-        [loading]="isLoading"
       >
         <ng-template #caption>
           <div class="d-flex flex-row justify-content-between">
             <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
               <p-select
                 placeholder="Buscar Por..."
-                [options]="options"
+                [options]="selectOptions"
                 [style]="{ 'text-transform': 'capitalize' }"
                 class="option-select"
                 [(ngModel)]="optionSelected"
@@ -43,6 +44,14 @@
                 (completeMethod)="onAutoComplete()"
                 (onSelect)="onSelectValue()"
               />
+              @if (firstLoading && legos.length === 0) {
+              <p-progress-spinner
+                strokeWidth="8"
+                fill="transparent"
+                animationDuration=".5s"
+                [style]="{ width: '50px', height: '50px' }"
+              />
+              }
             </div>
             <div class="d-flex flex-row flex-wrap justify-content-end gap-2 w-100">
               <p-button
@@ -50,6 +59,7 @@
                 severity="success"
                 iconPos="left"
                 icon="pi pi-plus-circle"
+                (onClick)="openAddModal()"
               />
               <p-button
                 label="Editar Lego"
@@ -57,6 +67,7 @@
                 iconPos="left"
                 icon="pi pi-check-circle"
                 [disabled]="!isLegoSelected"
+                (onClick)="openEditModal(legoSelected)"
               />
               <p-button
                 label="Eliminar Lego"
@@ -64,6 +75,7 @@
                 iconPos="left"
                 icon="pi pi-exclamation-triangle"
                 [disabled]="!isLegoSelected"
+                (onClick)="onDeleteLego(legoSelected.id)"
               />
             </div>
           </div>
@@ -71,26 +83,28 @@
         <ng-template #header let-columns>
           <tr>
             <th><p-tableHeaderCheckbox /></th>
-            <th>Imagen Lego</th>
-            <th>Imagen Pieza</th>
-            <th>Color Pieza</th>
             @for (col of columns; track col) {
             <th>{{ col.header }}</th>
             }
           </tr>
         </ng-template>
         <ng-template #body let-rowData let-columns="columns" let-lego>
+          @if (isLoading) {
+          <tr>
+            <td>
+              <p-skeleton size="1.5rem" />
+            </td>
+            @for (col of columns; track col) {
+            <td>
+              <p-skeleton width="5rem" class="mb-2" />
+            </td>
+            }
+          </tr>
+          } @else {
           <tr>
             <td>
               <p-tableCheckbox [value]="rowData" (click)="onEditLego(rowData)" />
             </td>
-            <td>
-              <img [src]="lego.imagen_lego" alt="" />
-            </td>
-            <td>
-              <img [src]="lego.imagen_pieza" alt="" />
-            </td>
-            <td>{{ lego.color_pieza }}</td>
             @for (col of columns; track col) { @if (col.field === 'lego') {
             <td>{{ rowData[col.field] ?? 'Sin Lego' }}</td>
             } @else if (col.field === 'pieza') {
@@ -98,13 +112,18 @@
             } @else if (col.field === 'task') {
             <td>{{ rowData[col.field] ?? 'Sin Bolsa' }}</td>
             }@else if(col.field === 'set_nombre') {
-            <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'Sin Nombre' }}</td>
+            <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'Sin Set' }}</td>
             } @else if (col.field === 'comentarios') {
             <td>{{ rowData[col.field] ? rowData[col.field] : 'Sin Comentarios' }}</td>
-            } @else {
+            }@else if (col.field.includes('imagen')) {
+            <td>
+              <img [src]="rowData[col.field]" alt="">
+            </td>
+            }@else {
             <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'No' }}</td>
             } }
           </tr>
+          }
         </ng-template>
       </p-table>
     </div>
