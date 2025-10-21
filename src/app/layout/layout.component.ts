@@ -159,7 +159,7 @@ export class LayoutComponent implements OnInit {
 
     dialogRef?.onClose.subscribe(result => {
       if(result) {
-        let legoEdited = { id: this.legoSelected.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.cantidad, esta_reemplazado: result.esta_reemplazado,
+        let legoEdited = { id: this.legoSelected.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.task, esta_reemplazado: result.esta_reemplazado,
           esta_completo: result.esta_completo, esta_pedido: result.esta_pedido };
         this.legoService.editLego(legoEdited).subscribe({
           next: response => {
