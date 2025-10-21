@@ -38,11 +38,21 @@ export class EditModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.lego = this.config.data.lego;
+    this.lego = this.config.data?.lego;
+    if (!this.lego) {
+      console.error('No lego data provided to edit modal');
+      this.ref.close();
+      return;
+    }
     this.prepareForm();
   }
 
   private prepareForm() {
+    if (!this.lego || typeof this.lego !== 'object') {
+      console.error('Invalid lego data provided to prepareForm');
+      return;
+    }
+    
     let controls = Object.keys(this.lego).filter(key => key !== 'id' && key !== 'lego_nombre' && key !== 'color_pieza');
     controls.forEach(ctrl => {
       this.legoForm.addControl(ctrl, new FormControl((this.lego as any)[ctrl]));

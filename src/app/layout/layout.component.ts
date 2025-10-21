@@ -154,6 +154,12 @@ export class LayoutComponent implements OnInit {
   }
 
   public openEditModal(lego: Lego) {
+    if (!lego) {
+      console.error('No lego selected for editing');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se ha seleccionado ningún lego para editar', life: 2000 });
+      return;
+    }
+
     const dialogRef = this.dialogService.open(EditModalComponent, {
       header: 'Editar Pieza de Lego',
       width: '60vw',
