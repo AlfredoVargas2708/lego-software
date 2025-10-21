@@ -34,7 +34,7 @@ export class LayoutComponent implements OnInit {
   selectOptions: Column[];
 
   optionSelected: Column;
-  legoSelected: Lego | undefined;
+  legoSelected!: Lego;
   inputValue: string;
   totalElements: number;
   rows: number;
@@ -120,6 +120,8 @@ export class LayoutComponent implements OnInit {
       this.resetPagination();
     }
 
+    this.selectedLegos = [];
+    this.isLegoSelected = false;
     this.isLoading = true;
     this.firstLoading = true;
     this.legoService.getLegos(this.optionSelected.field, this.inputValue, this.rows, this.page).subscribe({
@@ -136,14 +138,18 @@ export class LayoutComponent implements OnInit {
     })
   }
 
-  public onEditLego(lego: Lego) {
-    this.isLegoSelected = !this.isLegoSelected;
-    this.legoSelected = lego;
+  public onEditLego() {
+    this.isLegoSelected = this.selectedLegos.length > 0;
+    if (this.selectedLegos.length === 1) {
+      this.legoSelected = this.selectedLegos[0];
+    }
   }
 
   public onPageChange(event: TablePageEvent) {
     this.first = event.first;
     this.page = Math.floor(event.first / this.rows) + 1;
+    this.selectedLegos = [];
+    this.isLegoSelected = false;
     this.onSelectValue(false);
   }
 
@@ -159,13 +165,13 @@ export class LayoutComponent implements OnInit {
 
     dialogRef?.onClose.subscribe(result => {
       if(result) {
-        let legoEdited = { id: this.legoSelected?.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.task, esta_reemplazado: result.esta_reemplazado,
+        let legoEdited = { id: this.legoSelected.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.task, esta_reemplazado: result.esta_reemplazado,
           esta_completo: result.esta_completo, esta_pedido: result.esta_pedido };
         this.legoService.editLego(legoEdited).subscribe({
           next: response => {
             this.messageService.add({ severity: 'success', summary: response.message, life: 2000 });
+            this.selectedLegos = [];
             this.isLegoSelected = false;
-            this.legoSelected = undefined;
             this.onSelectValue(false);
           },
           error: err => {
@@ -228,6 +234,7 @@ export class LayoutComponent implements OnInit {
         this.legoService.deleteLego(lego_id).subscribe({
           next: response => {
             this.messageService.add({ severity: 'info', summary: response.message, life: 2000 });
+            this.selectedLegos = [];
             this.isLegoSelected = false;
             this.onSelectValue(false);
           },

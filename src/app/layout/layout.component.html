@@ -16,12 +16,11 @@
         dataKey="id"
         [rows]="rows"
         [paginator]="legos.length > 0"
-        [rows]="rows"
         [first]="first"
         [showCurrentPageReport]="legos.length > 0"
-        [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         (onPage)="onPageChange($event)"
+        (onSelectionChange)="onEditLego()"
         [rowsPerPageOptions]="[4, 8]"
       >
         <ng-template #caption>
@@ -66,16 +65,16 @@
                 severity="info"
                 iconPos="left"
                 icon="pi pi-check-circle"
-                [disabled]="!isLegoSelected"
-                (onClick)="openEditModal(legoSelected!)"
+                [disabled]="selectedLegos.length !== 1"
+                (onClick)="openEditModal(legoSelected)"
               />
               <p-button
                 label="Eliminar Lego"
                 severity="danger"
                 iconPos="left"
                 icon="pi pi-exclamation-triangle"
-                [disabled]="!isLegoSelected"
-                (onClick)="onDeleteLego(legoSelected!.id)"
+                [disabled]="selectedLegos.length !== 1"
+                (onClick)="onDeleteLego(legoSelected.id)"
               />
             </div>
           </div>
@@ -103,7 +102,7 @@
           } @else {
           <tr>
             <td>
-              <p-tableCheckbox [value]="rowData" (click)="onEditLego(rowData)" />
+              <p-tableCheckbox [value]="rowData" />
             </td>
             @for (col of columns; track col) { @if (col.field === 'lego') {
             <td>{{ rowData[col.field] ?? 'Sin Lego' }}</td>
