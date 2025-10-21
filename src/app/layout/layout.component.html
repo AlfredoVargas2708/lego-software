@@ -66,7 +66,7 @@
                 iconPos="left"
                 icon="pi pi-check-circle"
                 [disabled]="selectedLegos.length !== 1"
-                (onClick)="openEditModal(legoSelected)"
+                (onClick)="openEditModal(selectedLegos[0])"
               />
               <p-button
                 label="Eliminar Lego"
@@ -74,7 +74,7 @@
                 iconPos="left"
                 icon="pi pi-exclamation-triangle"
                 [disabled]="selectedLegos.length !== 1"
-                (onClick)="onDeleteLego(legoSelected.id)"
+                (onClick)="onDeleteLego(selectedLegos[0].id)"
               />
             </div>
           </div>

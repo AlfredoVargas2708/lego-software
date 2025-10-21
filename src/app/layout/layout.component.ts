@@ -139,9 +139,13 @@ export class LayoutComponent implements OnInit {
   }
 
   public onEditLego() {
+    console.log('onEditLego called, selectedLegos:', this.selectedLegos);
     this.isLegoSelected = this.selectedLegos.length > 0;
     if (this.selectedLegos.length === 1) {
       this.legoSelected = this.selectedLegos[0];
+      console.log('legoSelected set to:', this.legoSelected);
+    } else {
+      console.log('No lego selected or multiple legos selected');
     }
   }
 
@@ -154,6 +158,10 @@ export class LayoutComponent implements OnInit {
   }
 
   public openEditModal(lego: Lego) {
+    console.log('openEditModal called with lego:', lego);
+    console.log('selectedLegos:', this.selectedLegos);
+    console.log('legoSelected:', this.legoSelected);
+    
     if (!lego) {
       console.error('No lego selected for editing');
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se ha seleccionado ningún lego para editar', life: 2000 });
@@ -171,7 +179,7 @@ export class LayoutComponent implements OnInit {
 
     dialogRef?.onClose.subscribe(result => {
       if(result) {
-        let legoEdited = { id: this.legoSelected.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.task, esta_reemplazado: result.esta_reemplazado,
+        let legoEdited = { id: lego.id, lego: result.lego, pieza: result.pieza, cantidad: result.cantidad, task: result.task, esta_reemplazado: result.esta_reemplazado,
           esta_completo: result.esta_completo, esta_pedido: result.esta_pedido };
         this.legoService.editLego(legoEdited).subscribe({
           next: response => {
