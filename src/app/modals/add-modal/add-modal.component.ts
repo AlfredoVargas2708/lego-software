@@ -23,7 +23,7 @@ export class AddModalComponent implements OnInit {
   legoService: LegoService;
   ref: DynamicDialogRef;
 
-  inputOptions: string[];
+  inputOptions: string[] | number[];
   imagen_lego: string;
   imagen_pieza: string;
 
@@ -65,9 +65,10 @@ export class AddModalComponent implements OnInit {
   }
 
   public getImage(label: string) {
-    this.legoService.getImage(this.legoForm.get(label)?.value, label).subscribe({
+    let value = this.legoForm.get(label)?.value;
+    this.legoService.getImage(value, label).subscribe({
       next: response => {
-        label === 'lego' ? this.imagen_lego = response : this.imagen_pieza = response;
+        this.legoForm.get(`imagen_${label}`)?.setValue(response);
       },
       error: err => {
         console.error(err);

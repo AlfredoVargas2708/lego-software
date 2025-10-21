@@ -6,7 +6,7 @@
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
                 <p-auto-complete formControlName="lego" (completeMethod)="onAutoComplete('lego')" [suggestions]="inputOptions"
-                    (onSelect)="getImage('lego')" />
+                    (onSelect)="getImage('lego')" type="number" />
                 <label for="lego">Código Lego</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -16,7 +16,7 @@
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
                 <p-auto-complete formControlName="pieza" (completeMethod)="onAutoComplete('pieza')" [suggestions]="inputOptions"
-                (onSelect)="getImage('pieza')" />
+                (onSelect)="getImage('pieza')" type="number" />
                 <label for="pieza">Código Pieza</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -25,7 +25,8 @@
                 <i class="pi pi-box"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="cantidad" (completeMethod)="onAutoComplete('cantidad')" [suggestions]="inputOptions" />
+                <p-auto-complete formControlName="cantidad" (completeMethod)="onAutoComplete('cantidad')" [suggestions]="inputOptions"
+                    type="number" />
                 <label for="cantidad">Cantidad Pedida</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -34,7 +35,8 @@
                 <i class="pi pi-list"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="task" (completeMethod)="onAutoComplete('task')" [suggestions]="inputOptions"/>
+                <p-auto-complete formControlName="task" (completeMethod)="onAutoComplete('task')" [suggestions]="inputOptions" 
+                type="number" />
                 <label for="task">N° Bolsa</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -43,7 +45,8 @@
                 <i class="pi pi-verified"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="set_nombre" (completeMethod)="onAutoComplete('set_nombre')" [suggestions]="inputOptions" />
+                <p-auto-complete formControlName="set_nombre" (completeMethod)="onAutoComplete('set_nombre')" [suggestions]="inputOptions" 
+                type="text" />
                 <label for="set_nombre">Nombre Set</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -52,7 +55,7 @@
                 <i class="pi pi-verified"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="esta_pedido" (completeMethod)="onAutoComplete('esta_pedido')" [suggestions]="inputOptions" />
+                <p-auto-complete type="text" formControlName="esta_pedido" (completeMethod)="onAutoComplete('esta_pedido')" [suggestions]="inputOptions" />
                 <label for="esta_pedido">Esta Pedido</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -61,7 +64,7 @@
                 <i class="pi pi-verified"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="esta_completo" (completeMethod)="onAutoComplete('esta_completo')" [suggestions]="inputOptions" />
+                <p-auto-complete type="text" formControlName="esta_completo" (completeMethod)="onAutoComplete('esta_completo')" [suggestions]="inputOptions" />
                 <label for="esta_completo">Esta Completo</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -70,7 +73,7 @@
                 <i class="pi pi-verified"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="esta_reemplazado" (completeMethod)="onAutoComplete('esta_reemplazado')" [suggestions]="inputOptions"/>
+                <p-auto-complete type="text" formControlName="esta_reemplazado" (completeMethod)="onAutoComplete('esta_reemplazado')" [suggestions]="inputOptions"/>
                 <label for="esta_reemplazado">Esta Reemplazado</label>
             </p-floatlabel>
         </p-inputgroup>
@@ -79,7 +82,7 @@
                 <i class="pi pi-plus-circle"></i>
             </p-inputgroup-addon>
             <p-floatlabel variant="on">
-                <p-auto-complete formControlName="comentarios" (completeMethod)="onAutoComplete('comentarios')" [suggestions]="inputOptions" />
+                <p-auto-complete type="text" formControlName="comentarios" (completeMethod)="onAutoComplete('comentarios')" [suggestions]="inputOptions" />
                 <label for="comentarios">Comentarios</label>
             </p-floatlabel>
         </p-inputgroup>

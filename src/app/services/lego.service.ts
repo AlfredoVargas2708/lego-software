@@ -29,15 +29,15 @@ export class LegoService {
     );
   }
 
-  getInputOptions(column: string, value: string): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/options?column=${column}&value=${value}`)
+  getInputOptions(column: string, value: string): Observable<string[] | number[]> {
+    return this.http.get<string[] | number[]>(`${environment.apiUrl}/options?column=${column}&value=${value}`)
   }
 
   getLegos(column: string, value: string, limit: number, page: number): Observable<Response> {
     return this.http.get<Response>(`${environment.apiUrl}/legos?column=${column}&value=${value}&limit=${limit}&page=${page}`)
   }
 
-  getImage(value: string, type: string): Observable<string> {
+  getImage(value: string | null, type: string): Observable<string> {
     return this.http.get<string>(`${environment.apiUrl}/image?value=${value}&type=${type}`);
   }
 

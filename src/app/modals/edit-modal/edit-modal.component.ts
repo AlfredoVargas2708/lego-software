@@ -25,7 +25,7 @@ export class EditModalComponent implements OnInit {
   lego!: Lego;
   legoForm: FormGroup;
 
-  inputOptions: string[];
+  inputOptions: string[] | number[];
 
   constructor() {
     this.config = inject(DynamicDialogConfig);
