@@ -164,6 +164,7 @@ export class LayoutComponent implements OnInit {
         this.legoService.editLego(legoEdited).subscribe({
           next: response => {
             this.messageService.add({ severity: 'success', summary: response.message, life: 2000 });
+            this.onSelectValue(false);
           },
           error: err => {
             console.error(err);
