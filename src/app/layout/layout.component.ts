@@ -217,7 +217,7 @@ export class LayoutComponent implements OnInit {
             this.optionSelected = result.lego !== null ? { field: 'lego', header: 'lego' } : result.pieza !== null ? { field: 'pieza', header: 'pieza' } 
               : { field: 'task', header: 'task' };
             this.inputValue = result.lego !== null ? result.lego : result.pieza !== null ? result.pieza : result.task;
-            this.onSelectValue(this.legos.length > this.rows);
+            this.onSelectValue(false);
           },
           error: err => {
             this.messageService.add({ severity: 'danger', summary: err.message, life: 2000 });

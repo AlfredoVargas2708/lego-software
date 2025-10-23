@@ -68,7 +68,7 @@ export class AddModalComponent implements OnInit {
     let value = this.legoForm.get(label)?.value;
     this.legoService.getImage(value, label).subscribe({
       next: response => {
-        this.legoForm.get(`imagen_${label}`)?.setValue(response);
+        label === 'lego' ? this.imagen_lego = response : this.imagen_pieza = response;
       },
       error: err => {
         console.error(err);
