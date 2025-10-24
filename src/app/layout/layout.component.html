@@ -110,7 +110,7 @@
             </td>
             @for (col of columns; track col) { @if (col.field === 'lego') {
             <td>
-              <a (click)="seePDF(rowData[col.field])" style="cursor: pointer; color: #007bff; text-decoration: underline;">{{ rowData[col.field]}}</a>
+              <p-button class="lego-link" (onClick)="seePDF(rowData[col.field])"> {{ rowData[col.field] }} </p-button>
             </td>
             } @else if (col.field === 'pieza') {
             <td>{{ rowData[col.field] ?? 'Sin Pieza' }}</td>

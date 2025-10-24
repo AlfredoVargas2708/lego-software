@@ -17,6 +17,12 @@
     width: 100%;
   }
 
+  .lego-link {
+    .p-button {
+      background-color: #007bff;
+    }
+  }
+
   .btn-add .p-button,
   .btn-delete .p-button,
   .btn-save .p-button {
