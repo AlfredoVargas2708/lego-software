@@ -43,6 +43,7 @@ export class LayoutComponent implements OnInit {
   firstLoading: boolean;
   first: number;
   page: number;
+  pdfLink: string;
 
   legoService: LegoService;
   dialogService: DialogService;
@@ -65,6 +66,7 @@ export class LayoutComponent implements OnInit {
     this.firstLoading = false;
     this.first = 0;
     this.page = 1;
+    this.pdfLink = '';
 
     this.legoService = inject(LegoService);
     this.dialogService = inject(DialogService);
@@ -147,6 +149,22 @@ export class LayoutComponent implements OnInit {
     } else {
       console.log('No lego selected or multiple legos selected');
     }
+  }
+
+  public seePDF(lego: number) {
+    this.legoService.getPDFLink(lego).subscribe({
+      next: response => {
+        console.log(response);
+        this.pdfLink = response;
+        // Abrir el PDF automáticamente cuando se obtenga la respuesta
+        if (this.pdfLink) {
+          window.open(this.pdfLink, '_blank');
+        }
+      },
+      error: err => {
+        console.error(err)
+      }
+    })
   }
 
   public onPageChange(event: TablePageEvent) {
