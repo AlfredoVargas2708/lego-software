@@ -37,8 +37,10 @@ export class LegoService {
     return this.http.get<Response>(`${environment.apiUrl}/legos?column=${column}&value=${value}&limit=${limit}&page=${page}`)
   }
 
-  getPDFLink(lego: number):Observable<string> {
-    return this.http.get<string>(`${environment.apiUrl}/PDF?lego=${lego}`);
+  getInstructionsPDF(lego: number) {
+    return this.http.get(`${environment.apiUrl}/pdf?lego=${lego}`, {
+      responseType: 'blob' // <- importante
+    });
   }
 
   getImage(value: string | null, type: string): Observable<string> {

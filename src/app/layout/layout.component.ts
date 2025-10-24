@@ -151,20 +151,21 @@ export class LayoutComponent implements OnInit {
     }
   }
 
-  public seePDF(lego: number) {
-    this.legoService.getPDFLink(lego).subscribe({
-      next: response => {
-        console.log(response);
-        this.pdfLink = response;
-        // Abrir el PDF automáticamente cuando se obtenga la respuesta
-        if (this.pdfLink) {
-          window.open(this.pdfLink, '_blank');
-        }
+  public seePDF(legoId: number) {
+    if (!legoId) return;
+
+    // Llamar al backend que devuelve el PDF
+    this.legoService.getInstructionsPDF(legoId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+
+        // Abrir el PDF en una nueva pestaña
+        window.open(url, '_blank');
       },
-      error: err => {
-        console.error(err)
-      }
-    })
+      error: (err) => {
+        console.error('Error al abrir PDF:', err);
+      },
+    });
   }
 
   public onPageChange(event: TablePageEvent) {
