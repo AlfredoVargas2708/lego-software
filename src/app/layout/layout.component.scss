@@ -17,10 +17,11 @@
     width: 100%;
   }
 
-  .lego-link {
-    .p-button {
-      background-color: #007bff;
-    }
+  .lego-link .p-button {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    text-decoration: underline;
   }
 
   .btn-add .p-button,
