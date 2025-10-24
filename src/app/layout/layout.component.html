@@ -111,6 +111,14 @@
             @for (col of columns; track col) { @if (col.field === 'lego') {
             <td>
               <p-button class="lego-link" (onClick)="seePDF(rowData[col.field])"> {{ rowData[col.field] }} </p-button>
+              @if (openingPDF && rowData.id === loadingLego) {
+                <p-progress-spinner
+                  strokeWidth="8"
+                  fill="transparent"
+                  animationDuration=".5s"
+                  [style]="{ width: '10px', height: '10px' }"
+                />
+              }
             </td>
             } @else if (col.field === 'pieza') {
             <td>{{ rowData[col.field] ?? 'Sin Pieza' }}</td>

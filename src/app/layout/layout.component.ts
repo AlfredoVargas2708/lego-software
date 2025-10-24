@@ -41,9 +41,11 @@ export class LayoutComponent implements OnInit {
   isLegoSelected: boolean;
   isLoading: boolean;
   firstLoading: boolean;
+  openingPDF: boolean;
   first: number;
   page: number;
   pdfLink: string;
+  loadingLego: number | null;
 
   legoService: LegoService;
   dialogService: DialogService;
@@ -64,9 +66,11 @@ export class LayoutComponent implements OnInit {
     this.isLegoSelected = false;
     this.isLoading = false;
     this.firstLoading = false;
+    this.openingPDF = false;
     this.first = 0;
     this.page = 1;
     this.pdfLink = '';
+    this.loadingLego = 1;
 
     this.legoService = inject(LegoService);
     this.dialogService = inject(DialogService);
@@ -151,16 +155,22 @@ export class LayoutComponent implements OnInit {
     }
   }
 
-  public seePDF(legoId: number) {
-    if (!legoId) return;
+  public seePDF(lego: number) {
+    if (!lego) return;
+    let idx = this.legos.findIndex(lg => lg.lego === lego);
+    this.loadingLego = this.legos[idx].id;
+    console.log(this.loadingLego)
+    this.openingPDF = true;
 
     // Llamar al backend que devuelve el PDF
-    this.legoService.getInstructionsPDF(legoId).subscribe({
+    this.legoService.getInstructionsPDF(lego).subscribe({
       next: (blob) => {
         const url = URL.createObjectURL(blob);
 
         // Abrir el PDF en una nueva pestaña
         window.open(url, '_blank');
+        this.openingPDF = false;
+        this.loadingLego = null;
       },
       error: (err) => {
         console.error('Error al abrir PDF:', err);
