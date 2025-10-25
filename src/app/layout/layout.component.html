@@ -25,7 +25,7 @@
       >
         <ng-template #caption>
           <div class="row align-items-center">
-            <div class="col-lg-4">
+            <div class="col-lg-5">
               <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
                 <p-select
                   placeholder="Buscar Por..."
@@ -43,7 +43,26 @@
                   [suggestions]="inputOptions"
                   (completeMethod)="onAutoComplete()"
                   (onSelect)="onSelectValue()"
-                />
+                >
+                  <ng-template let-option #item>
+                    <div class="flex items-center gap-2">
+                      <div>{{ option }}</div>
+                    </div>
+                  </ng-template>
+                  @if (inputOptions.length === 0) {
+                  <ng-template #footer>
+                    <div class="px-3 py-3">
+                      <p-button
+                        label="Agregar Lego"
+                        severity="success"
+                        iconPos="left"
+                        icon="pi pi-plus-circle"
+                        (onClick)="openAddModal()"
+                      />
+                    </div>
+                  </ng-template>
+                  }
+                </p-auto-complete>
                 @if (firstLoading && legos.length === 0) {
                 <p-progress-spinner
                   strokeWidth="8"
@@ -51,26 +70,18 @@
                   animationDuration=".5s"
                   [style]="{ width: '50px', height: '50px', margin: '0px 10px' }"
                 />
+                } @if (openingPDF) {
+                <p-progress-spinner
+                  strokeWidth="8"
+                  fill="transparent"
+                  animationDuration=".5s"
+                  [style]="{ width: '50px', height: '50px', margin: '0px 10px' }"
+                />
                 }
-                @if (openingPDF) {
-                  <p-progress-spinner
-                    strokeWidth="8"
-                    fill="transparent"
-                    animationDuration=".5s"
-                    [style]="{ width: '50px', height: '50px', margin: '0px 10px' }"
-                  />
-                  }
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
-                <p-button
-                  label="Agregar Lego"
-                  severity="success"
-                  iconPos="left"
-                  icon="pi pi-plus-circle"
-                  (onClick)="openAddModal()"
-                />
+            <div class="col-lg-2">
+              <div class="d-flex flex-row flex-wrap justify-content-end gap-2 w-100">
                 <p-button
                   label="Editar Lego"
                   severity="info"
@@ -118,7 +129,9 @@
             </td>
             @for (col of columns; track col) { @if (col.field === 'lego') {
             <td>
-              <p-button class="lego-link" (onClick)="seePDF(rowData[col.field])"> {{ rowData[col.field] }} </p-button>
+              <p-button class="lego-link" (onClick)="seePDF(rowData[col.field])">
+                {{ rowData[col.field] }}
+              </p-button>
             </td>
             } @else if (col.field === 'pieza') {
             <td>{{ rowData[col.field] ?? 'Sin Pieza' }}</td>
@@ -130,7 +143,7 @@
             <td>{{ rowData[col.field] ? rowData[col.field] : 'Sin Comentarios' }}</td>
             }@else if (col.field.includes('imagen')) {
             <td>
-              <img [src]="rowData[col.field]" alt="">
+              <img [src]="rowData[col.field]" alt="" />
             </td>
             }@else {
             <td>{{ rowData[col.field] !== '' ? rowData[col.field] : 'No' }}</td>

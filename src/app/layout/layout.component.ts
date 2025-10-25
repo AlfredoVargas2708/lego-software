@@ -229,7 +229,8 @@ export class LayoutComponent implements OnInit {
       width: '60vw',
       height: '600px',
       modal: true,
-      closable: true
+      closable: true,
+      data: { field: this.optionSelected.field, value: this.inputValue }
     })
 
     dialogRef?.onClose.subscribe(result => {

@@ -9,7 +9,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { LegoService } from '../../services/lego.service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { response } from 'express';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-add-modal',
@@ -22,14 +22,14 @@ export class AddModalComponent implements OnInit {
   legoForm: FormGroup;
   legoService: LegoService;
   ref: DynamicDialogRef;
+  config: DynamicDialogConfig;
 
   inputOptions: string[] | number[];
   imagen_lego: string;
   imagen_pieza: string;
 
-  ngOnInit(): void { }
-
   constructor() {
+    this.config = inject(DynamicDialogConfig);
     this.fb = inject(FormBuilder);
     this.legoService = inject(LegoService);
     this.ref = inject(DynamicDialogRef);
@@ -49,6 +49,15 @@ export class AddModalComponent implements OnInit {
     this.inputOptions = [];
     this.imagen_lego = '';
     this.imagen_pieza = '';
+  }
+
+  ngOnInit(): void {
+    this.legoForm.patchValue({
+      [this.config.data.field] : this.config.data.value
+    });
+    if(this.config.data.field === 'lego' || this.config.data.field === 'pieza') {
+      this.getImage(this.config.data.field);
+    }
   }
 
   public onAutoComplete(label: string) {
