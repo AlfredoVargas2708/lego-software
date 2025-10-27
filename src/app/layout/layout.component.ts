@@ -197,7 +197,8 @@ export class LayoutComponent implements OnInit {
       height: '600px',
       modal: true,
       closable: true,
-      data: { lego: lego }
+      data: { lego: lego },
+      position: 'left'
     });
 
     dialogRef?.onClose.subscribe(result => {
@@ -230,7 +231,8 @@ export class LayoutComponent implements OnInit {
       height: '600px',
       modal: true,
       closable: true,
-      data: { field: this.optionSelected.field, value: this.inputValue }
+      data: { field: this.optionSelected.field, value: this.inputValue },
+      position: 'left'
     })
 
     dialogRef?.onClose.subscribe(result => {

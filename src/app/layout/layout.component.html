@@ -8,42 +8,21 @@
     <div class="table-responsive-lg">
       <p-toast />
       <p-confirmdialog />
-      <p-table
-        [columns]="options"
-        [value]="legos"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [(selection)]="selectedLegos"
-        dataKey="id"
-        [rows]="rows"
-        [paginator]="legos.length > 0"
-        [first]="first"
+      <p-table [columns]="options" [value]="legos" [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selectedLegos"
+        dataKey="id" [rows]="rows" [paginator]="legos.length > 0" [first]="first"
         [showCurrentPageReport]="legos.length > 0"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        (onPage)="onPageChange($event)"
-        (onSelectionChange)="onEditLego()"
-        [rowsPerPageOptions]="[4, 8]"
-      >
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="onPageChange($event)"
+        (onSelectionChange)="onEditLego()" [rowsPerPageOptions]="[4, 8]">
         <ng-template #caption>
-          <div class="row align-items-center">
-            <div class="col-lg-4 col-md-4">
+          <div class="row align-items-center gap-4">
+            <div class="col-lg-4 col-md-4 col-sm-12">
               <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
-                <p-select
-                  placeholder="Buscar Por..."
-                  [options]="selectOptions"
-                  [style]="{ 'text-transform': 'capitalize' }"
-                  class="option-select"
-                  [(ngModel)]="optionSelected"
-                  optionLabel="header"
-                />
-                <p-auto-complete
-                  placeholder="Ingresar Valor..."
-                  class="auto-complete"
-                  [(ngModel)]="inputValue"
-                  [showClear]="true"
-                  [suggestions]="inputOptions"
-                  (completeMethod)="onAutoComplete()"
-                  (onSelect)="onSelectValue()"
-                >
+                <p-select placeholder="Buscar Por..." [options]="selectOptions"
+                  [style]="{ 'text-transform': 'capitalize' }" class="option-select" [(ngModel)]="optionSelected"
+                  optionLabel="header" />
+                <p-auto-complete placeholder="Ingresar Valor..." class="auto-complete" [(ngModel)]="inputValue"
+                  [showClear]="true" [suggestions]="inputOptions" (completeMethod)="onAutoComplete()"
+                  (onSelect)="onSelectValue()">
                   <ng-template let-option #item>
                     <div class="flex items-center gap-2">
                       <div>{{ option }}</div>
@@ -52,52 +31,29 @@
                   @if (inputOptions.length === 0) {
                   <ng-template #footer>
                     <div class="px-3 py-3">
-                      <p-button
-                        label="Agregar Lego"
-                        severity="success"
-                        iconPos="left"
-                        icon="pi pi-plus-circle"
-                        (onClick)="openAddModal()"
-                      />
+                      <p-button label="Agregar Lego" severity="success" iconPos="left" icon="pi pi-plus-circle"
+                        (onClick)="openAddModal()" />
                     </div>
                   </ng-template>
                   }
                 </p-auto-complete>
                 @if (firstLoading && legos.length === 0) {
-                <p-progress-spinner
-                  strokeWidth="8"
-                  fill="transparent"
-                  animationDuration=".5s"
-                  [style]="{ width: '50px', height: '50px', margin: '0px 10px' }"
-                />
+                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
+                  [style]="{ width: '50px', height: '50px', margin: '0px 10px' }" />
                 } @if (openingPDF) {
-                <p-progress-spinner
-                  strokeWidth="8"
-                  fill="transparent"
-                  animationDuration=".5s"
-                  [style]="{ width: '50px', height: '50px', margin: '0px 10px' }"
-                />
+                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
+                  [style]="{ width: '50px', height: '50px', margin: '0px 10px' }" />
                 }
               </div>
             </div>
-            <div class="col-lg-3 col-md-3">
-              <div class="d-flex flex-row flex-wrap justify-content-end gap-2 w-100">
-                <p-button
-                  label="Editar Lego"
-                  severity="info"
-                  iconPos="left"
-                  icon="pi pi-check-circle"
-                  [disabled]="selectedLegos.length !== 1"
-                  (onClick)="openEditModal(selectedLegos[0])"
-                />
-                <p-button
-                  label="Eliminar Lego"
-                  severity="danger"
-                  iconPos="left"
-                  icon="pi pi-exclamation-triangle"
-                  [disabled]="selectedLegos.length !== 1"
-                  (onClick)="onDeleteLego(selectedLegos[0].id)"
-                />
+            <div class="col-lg-3 col-md-3 col-sm-12">
+              <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
+                <p-button label="Agregar Lego" severity="success" iconPos="left" icon="pi pi-plus-circle"
+                  (onClick)="openAddModal()" />
+                <p-button label="Editar Lego" severity="info" iconPos="left" icon="pi pi-check-circle"
+                  [disabled]="selectedLegos.length !== 1" (onClick)="openEditModal(selectedLegos[0])" />
+                <p-button label="Eliminar Lego" severity="danger" iconPos="left" icon="pi pi-exclamation-triangle"
+                  [disabled]="selectedLegos.length !== 1" (onClick)="onDeleteLego(selectedLegos[0].id)" />
               </div>
             </div>
           </div>

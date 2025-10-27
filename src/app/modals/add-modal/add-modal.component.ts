@@ -52,11 +52,13 @@ export class AddModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.legoForm.patchValue({
-      [this.config.data.field] : this.config.data.value
-    });
-    if(this.config.data.field === 'lego' || this.config.data.field === 'pieza') {
-      this.getImage(this.config.data.field);
+    if(this.config.data) {
+      this.legoForm.patchValue({
+        [this.config.data.field] : this.config.data.value
+      });
+      if(this.config.data.field === 'lego' || this.config.data.field === 'pieza') {
+        this.getImage(this.config.data.field);
+      }
     }
   }
 
