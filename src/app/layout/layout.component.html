@@ -25,7 +25,7 @@
       >
         <ng-template #caption>
           <div class="row align-items-center">
-            <div class="col-lg-3">
+            <div class="col-lg-4 col-md-4">
               <div class="d-flex flex-row flex-wrap justify-content-start gap-2 w-100">
                 <p-select
                   placeholder="Buscar Por..."
@@ -63,7 +63,7 @@
                   </ng-template>
                   }
                 </p-auto-complete>
-                @if (firstLoading && legos.length === 0) {
+                @if (!(firstLoading && legos.length === 0)) {
                 <p-progress-spinner
                   strokeWidth="8"
                   fill="transparent"
@@ -80,7 +80,7 @@
                 }
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3 col-md-3">
               <div class="d-flex flex-row flex-wrap justify-content-end gap-2 w-100">
                 <p-button
                   label="Editar Lego"
